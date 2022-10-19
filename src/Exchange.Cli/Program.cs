@@ -9,7 +9,7 @@ public class Program
         var host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddSingleton<CurrencyCollection>(GetCurrencyCollection(context.Configuration));
+                services.AddSingleton<CurrencyCollection>(GetCurrencyCollection());
                 services.AddSingleton<ICurrencyConverter, CurrencyConverter>();
                 services.AddSingleton<IValidator<CurrencyCollection>, CurrencyValidator>();
             })
@@ -94,8 +94,23 @@ public class Program
         return new ExchangeContext(dict[pairs[0]], dict[pairs[1]], amount);
     }
 
-    private static CurrencyCollection GetCurrencyCollection(IConfiguration configuration)
+    private static CurrencyCollection GetCurrencyCollection()
     {
+        return new CurrencyCollection
+        (
+            new Currency[]
+            {
+                new Currency("EUR", 7.4394M),
+                new Currency("USD", 6.6311M),
+                new Currency("GBP", 8.5285M),
+                new Currency("SEK", 0.7610M),
+                new Currency("NOK", 0.7840M),
+                new Currency("CHF", 6.8358M),
+                new Currency("JPY", 0.5974M),
+                new Currency("DKK", 1M),
+            }
+        );
+        /*
         var root = configuration.GetSection(nameof(CurrencyCollection)).GetSection("Currencies");
         var currencies = new List<Currency>();
         foreach (var child in root.GetChildren())
@@ -105,5 +120,6 @@ public class Program
             currencies.Add(new Currency(iso, amount));
         }
         return new CurrencyCollection(currencies);
+        */
     }
 }
